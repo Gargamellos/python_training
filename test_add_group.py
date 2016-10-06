@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.chrome import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 import time, unittest
+
 
 def is_alert_present(wd):
     try:
@@ -13,7 +15,6 @@ def is_alert_present(wd):
 class test_add_group(unittest.TestCase):
     def setUp(self):
         self.wd = WebDriver()
-        self.wd.implicitly_wait(60)
     
     def test_test_add_group(self):
         success = True
