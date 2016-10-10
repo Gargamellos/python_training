@@ -19,6 +19,7 @@ class test_add_contact(unittest.TestCase):
         wd.get("http://localhost:8080/addressbook/edit.php")
 
     def login(self, wd, username, password):
+        self.open_home_page(wd)
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
@@ -31,6 +32,7 @@ class test_add_contact(unittest.TestCase):
         wd.find_element_by_link_text("nowy wpis").click()
 
     def create_contact(self, wd, contact):
+        self.open_contact_page(wd)
         # fill contact firm
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -82,6 +84,8 @@ class test_add_contact(unittest.TestCase):
         wd.find_element_by_name("notes").send_keys(contact.notes)
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.return_to_home_page(wd)
+
 
     def return_to_home_page(self, wd):
         wd.find_element_by_link_text("home page").click()
@@ -91,28 +95,22 @@ class test_add_contact(unittest.TestCase):
 
     def test_add_contact(self):
         wd = self.wd
-        self.open_home_page(wd)
         self.login(wd, username = "admin", password = "secret")
-        self.open_contact_page(wd)
         self.create_contact(wd, Contact(name = "asd", middlename = "\\9", surname = "asda", nick = "adsa", title = "swed",
                             company = "aswq", address = "asa", homephone = "\\9", mobilephone = "45654",
                             workphone = "\\9", fax = "\\9", email = "asdas", email2 = "\\9", email3 = "\\9",
                             homepage = "sdfsd", address2 = "gfd", phone2 = "gfd",
                             notes = "gfd"))
-        self.return_to_home_page(wd)
         self.logout(wd)
 
     def test_add_empty_contact(self):
         wd = self.wd
-        self.open_home_page(wd)
         self.login(wd, username = "admin", password = "secret")
-        self.open_contact_page(wd)
         self.create_contact(wd, Contact(name = "", middlename = "", surname = "", nick = "", title = "",
                             company = "", address = "", homephone = "", mobilephone = "",
                             workphone = "", fax = "", email = "", email2 = "", email3 = "",
                             homepage = "", address2 = "", phone2 = "",
                             notes = ""))
-        self.return_to_home_page(wd)
         self.logout(wd)
 
     def tearDown(self):
