@@ -1,23 +1,15 @@
-from selenium.webdriver.chrome.webdriver import WebDriver
-from fixture_contact.session import SessionHelper
 
 
-class Application1:
-    def __init__(self):
-        self.wd = WebDriver()
-        self.wd.implicitly_wait(60)
-        self.session = SessionHelper(self)
-
-    def open_home_page(self):
-        wd = self.wd
-        wd.get("http://localhost:8080/addressbook/edit.php")
+class ContactHelper:
+    def __init__(self, app):
+        self.app = app
 
     def open_contact_page(self):
-        wd = self.wd
+        wd = self.app.wd
         wd.find_element_by_link_text("nowy wpis").click()
 
-    def create_contact(self, contact):
-        wd = self.wd
+    def create(self, contact):
+        wd = self.app.wd
         self.open_contact_page()
         # fill contact firm
         wd.find_element_by_name("firstname").click()
@@ -73,8 +65,5 @@ class Application1:
         self.return_to_home_page()
 
     def return_to_home_page(self):
-        wd = self.wd
+        wd = self.app.wd
         wd.find_element_by_link_text("home page").click()
-
-    def destroy(self):
-        self.wd.quit()
