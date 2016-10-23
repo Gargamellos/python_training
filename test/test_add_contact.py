@@ -3,11 +3,14 @@ from model.contact import Contact
 
 
 def test_add_contact(app):
+    old_contacts = app.contact.get_contact_list()
     app.contact.create(Contact(name ="asd", middlename ="\\9", surname ="asda", nick ="adsa", title ="swed",
                                company = "aswq", address = "asa", homephone = "\\9", mobilephone = "45654",
                                workphone = "\\9", fax = "\\9", email = "asdas", email2 = "\\9", email3 = "\\9",
                                homepage = "sdfsd", address2 = "gfd", phone2 = "gfd",
                                notes = "gfd"))
+    new_contacts = app.contact.get_contact_list()
+    assert len(old_contacts) + 1 == len(new_contacts)
 
 
 def test_add_empty_contact(app):
