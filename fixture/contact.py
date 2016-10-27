@@ -149,7 +149,9 @@ class ContactHelper:
         self.open_stronaglowna_page()
         contacts = []
         for element in wd.find_elements_by_name("entry"):
-            text = element.text
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            contacts.append(Contact(name=text, surname=text, id=id))
+            cells = element.find_elements_by_tag_name("td")
+            surname = cells[1].text
+            name = cells[2].text
+            id = cells[0].find_element_by_name("selected[]").get_attribute("value")
+            contacts.append(Contact(surname=surname, name=name, id=id))
         return contacts
