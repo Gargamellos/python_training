@@ -139,14 +139,13 @@ class ContactHelper:
         self.open_stronaglowna_page()
         self.select_contact_by_index(index)
         # open modification form
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        self.open_contact_to_modify_by_index(index)
         # fill contact form
         self.fill_contact_form(new_contact_data)
         # submit modification
         wd.find_element_by_xpath("//div[@id='content']/form[1]/input[22]").click()
         self.return_to_home_page()
         self.contact_cache = None
-
 
     def return_to_home_page(self):
         wd = self.app.wd
@@ -164,10 +163,21 @@ class ContactHelper:
             wd = self.app.wd
             self.open_stronaglowna_page()
             self.contact_cache = []
-            for element in wd.find_elements_by_name("entry"):
-                cells = element.find_elements_by_tag_name("td")
+            for row in wd.find_elements_by_name("entry"):
+                cells = row.find_elements_by_tag_name("td")
                 surname = cells[1].text
                 name = cells[2].text
                 id = cells[0].find_element_by_name("selected[]").get_attribute("value")
                 self.contact_cache.append(Contact(surname=surname, name=name, id=id))
         return list(self.contact_cache)
+
+    def open_contact_to_modify_by_index(self, index):
+        wd = self.app.wd
+        self.open_stronaglowna_page()
+        row = wd.find_elements_by_name("entry")[index]
+        cell = row.find_elements_by_tag_name("td")[7]
+        cell.find_element_by_tag_name("a").click()
+
+
+
+
