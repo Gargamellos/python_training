@@ -1,4 +1,6 @@
 from model.contact import Contact
+import re
+
 
 class ContactHelper:
     def __init__(self, app):
@@ -23,9 +25,9 @@ class ContactHelper:
 
     def fill_contact_form(self, contact):
         wd = self.app.wd
-        self.change_field_value("firstname", contact.name)
+        self.change_field_value("firstname", contact.firstname)
         self.change_field_value("middlename", contact.middlename)
-        self.change_field_value("lastname", contact.surname)
+        self.change_field_value("lastname", contact.lastname)
         self.change_field_value("nickname", contact.nick)
         self.change_field_value("title", contact.title)
         self.change_field_value("company", contact.company)
@@ -82,12 +84,12 @@ class ContactHelper:
         # edit contact
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(contact.name)
+        wd.find_element_by_name("firstname").send_keys(contact.firstname)
         wd.find_element_by_name("middlename").click()
         wd.find_element_by_name("middlename").send_keys(contact.middlename)
         wd.find_element_by_name("lastname").click()
         wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(contact.surname)
+        wd.find_element_by_name("lastname").send_keys(contact.lastname)
         wd.find_element_by_name("nickname").click()
         wd.find_element_by_name("nickname").clear()
         wd.find_element_by_name("nickname").send_keys(contact.nick)
@@ -139,7 +141,7 @@ class ContactHelper:
         self.open_stronaglowna_page()
         self.select_contact_by_index(index)
         # open modification form
-        self.open_contact_to_modify_by_index(index)
+        self.open_contact_to_edit_by_index(index)
         # fill contact form
         self.fill_contact_form(new_contact_data)
         # submit modification
@@ -165,18 +167,54 @@ class ContactHelper:
             self.contact_cache = []
             for row in wd.find_elements_by_name("entry"):
                 cells = row.find_elements_by_tag_name("td")
-                surname = cells[1].text
-                name = cells[2].text
-                id = cells[0].find_element_by_name("selected[]").get_attribute("value")
-                self.contact_cache.append(Contact(surname=surname, name=name, id=id))
+                lastname = cells[1].text
+                firstname = cells[2].text
+                id = cells[0].find_element_by_tag_name("input").get_attribute("value")
+                all_phones = cells[5].text
+                self.contact_cache.append(Contact(lastname=lastname, firstname=firstname, id=id,
+                                                  all_phones_from_home_page=all_phones))
         return list(self.contact_cache)
 
-    def open_contact_to_modify_by_index(self, index):
+    def open_contact_to_edit_by_index(self, index):
         wd = self.app.wd
         self.open_stronaglowna_page()
         row = wd.find_elements_by_name("entry")[index]
         cell = row.find_elements_by_tag_name("td")[7]
         cell.find_element_by_tag_name("a").click()
+
+    def open_contact_view_by_index(self, index):
+        wd = self.app.wd
+        self.open_stronaglowna_page()
+        row = wd.find_elements_by_name("entry")[index]
+        cell = row.find_elements_by_tag_name("td")[6]
+        cell.find_element_by_tag_name("a").click()
+
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_contact_to_edit_by_index(index)
+        firstname = wd.find_element_by_name("firstname").get_attribute("value")
+        lastname = wd.find_element_by_name("lastname").get_attribute("value")
+        id = wd.find_element_by_name("id").get_attribute("value")
+        homephone = wd.find_element_by_name("home").get_attribute("value")
+        workphone = wd.find_element_by_name("work").get_attribute("value")
+        mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
+        phone2 = wd.find_element_by_name("phone2").get_attribute("value")
+        return Contact(firstname=firstname, lastname=lastname, id=id,
+                       homephone=homephone, mobilephone=mobilephone,
+                       workphone=workphone, phone2=phone2)
+
+    def get_contact_from_view_page(self,index):
+        wd = self.app.wd
+        self.open_contact_view_by_index(index)
+        text = wd.find_element_by_id("content").text
+        homephone = re.search("H: (.*)", text).group(1)
+        workphone = re.search("W: (.*)", text).group(1)
+        mobilephone = re.search("M: (.*)", text).group(1)
+        phone2 = re.search("P: (.*)", text).group(1)
+        return Contact(homephone=homephone, mobilephone=mobilephone,
+                       workphone=workphone, phone2=phone2)
+
+
 
 
 
