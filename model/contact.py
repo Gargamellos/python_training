@@ -29,10 +29,10 @@ class Contact:
         self.id = id
 
     def __repr__(self):
-        return "%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s" % (self.id, self.lastname, self.firstname,
-                             self.middlename, self.nick, self.title, self.company, self.address, self.homephone,
-                             self.mobilephone, self.workphone, self.fax, self.email, self.email2, self.email3,
-                             self.homepage, self.address2, self.phone2, self.notes)
+        return "%s:%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (self.id, self.lastname, self.firstname,
+                             self.middlename, self.nick, self.title, self.company, self.address,
+                             self.homephone, self.mobilephone, self.workphone, self.fax, self.email, self.email2,
+                             self.email3, self.homepage, self.address2, self.phone2, self.notes)
 
     def __eq__(self, other):
         return (self.id is None or other.id is None or self.id == other.id) and self.lastname == other.lastname\
