@@ -14,13 +14,14 @@ testdata = [Contact(lastname="", firstname="", middlename="", nick="", title="",
                     mobilephone="", workphone="", fax="", email="", email2="", email3="", homepage="", address2="",
                     phone2="", notes="")] + [
             Contact(lastname=random_string("lastname", 10), firstname=random_string("firstname", 10),
-                    middlename=random_string("middlename", 10), nick=random_string("nick", 10), title=random_string("title", 10),
-                    company=random_string("company", 10), address=random_string("address", 10),
-                    homephone=random_string("homephone", 10), mobilephone=random_string("mobilephone", 10),
-                    workphone=random_string("workphone", 10), fax=random_string("fax", 10), email=random_string("email", 10),
-                    email2=random_string("email2", 10), email3=random_string("email3", 10),
-                    homepage=random_string("homephone",10), address2=random_string("address2", 10),
-                    phone2=random_string("phone2", 10), notes=random_string("notes", 10))
+                    middlename=random_string("middlename", 10), nick=random_string("nick", 10),
+                    title=random_string("title", 10), company=random_string("company", 10),
+                    address=random_string("address", 10), homephone=random_string("home", 10),
+                    mobilephone=random_string("mobile", 10), workphone=random_string("work", 10),
+                    fax=random_string("fax", 10), email=random_string("email", 10), email2=random_string("email2", 10),
+                    email3=random_string("email3", 10), homepage=random_string("homepage",10),
+                    address2=random_string("address2", 10), phone2=random_string("phone2", 10),
+                    notes=random_string("notes", 10))
             for i in range(5)
 ]
 
