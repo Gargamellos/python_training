@@ -1,6 +1,7 @@
 
 import mysql.connector
 from model.group import Group
+from model.contact import Contact
 
 class DbFixture:
 
@@ -10,6 +11,7 @@ class DbFixture:
         self.user = user
         self.password = password
         self.connection = mysql.connector.connect(host=host, database=name, user=user, password=password)
+        self.connection.autocommit = True
 
     def get_group_list(self):
         list = []
@@ -19,6 +21,17 @@ class DbFixture:
             for row in cursor:
                 (id, name, header, footer) = row
                 list.append(Group(id=str(id), name=name, header=header, footer=footer))
+        finally:
+            cursor.close()
+        return list
+
+    def get_contact_list(self):
+        list = []
+        cursor = self.connection.cursor()
+        try:
+            for row in cursor:
+                (id, firstname, lastname, address, home, mobile, work, email, email2, email3, phone2) = row
+                                  mobilephone=mobile, workphone=work, email=email, email2=email2, email3=email3, phone2=phone2))
         finally:
             cursor.close()
         return list
