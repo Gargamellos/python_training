@@ -4,10 +4,10 @@ import re
 
 def test_verification_on_home_page(app,db):
     contact_from_home_page = app.contact.get_contact_list()
-    contact_from_db_list = db.get_contact_list()
+    def clean(contact):
+        return Contact(id=contact.id, lastname=contact.lastname.strip(), firstname=contact.firstname.strip())
+    contact_from_db_list = map(clean,db.get_contact_list())
     assert sorted(contact_from_home_page, key=Contact.id_or_max) == sorted(contact_from_db_list, key=Contact.id_or_max)
-
-
 
 #def test_verification_on_home_page(app):
 #    old_contacts = app.contact.get_contact_list()
