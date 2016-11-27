@@ -1,4 +1,5 @@
 from model.group import Group
+import random
 
 
 class GroupHelper:
@@ -128,6 +129,13 @@ class GroupHelper:
                 id = element.find_element_by_name("selected[]").get_attribute("value")
                 self.group_cache.append(Group(name=text, id=id))
         return list(self.group_cache)
+
+    def select_id_group(self):
+        wd = self.app.wd
+        self.open_group_page()
+        group_list = wd.find_elements_by_name("selected[]")
+        id_group = random.choice(group_list).get_attribute("value")
+        return id_group
 
 
 

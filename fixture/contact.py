@@ -2,6 +2,7 @@ from model.contact import Contact
 import re
 
 
+
 class ContactHelper:
     def __init__(self, app):
         self.app = app
@@ -87,6 +88,34 @@ class ContactHelper:
         wd.switch_to_alert().accept()
         self.open_stronaglowna_page()
         self.contact_cache = None
+
+    def add_contact_to_group(self, id, id_group):
+        wd = self.app.wd
+        self.open_stronaglowna_page()
+        self.select_contact_by_id(id)
+        wd.find_element_by_xpath('//select[@name="to_group"]/option[@value="%s"]' % id_group).click()
+        wd.find_element_by_name("add").click()
+        self.open_stronaglowna_page()
+        self.contact_cache = None
+
+    def del_contact_from_group(self, id, id_group):
+        wd = self.app.wd
+        self.app.open_home_page()
+        wd.find_element_by_xpath('//select[@name="group"]/option[@value="%s"]' % id_group).click()
+        self.select_contact_by_id(id)
+        wd.find_element_by_xpath("//input[@name='remove']").click()
+        self.open_stronaglowna_page()
+        self.contact_cache = None
+
+#        wd = self.app.wd
+#        self.open_stronaglowna_page()
+#        wd.find_element_by_xpath("//form[@id='right']/select//option[3]").click()
+#        wd.find_element_by_name("selected[]").click()
+#        wd.find_element_by_name("remove").click()
+#        wd.find_element_by_link_text("group page \"name\"").click()
+#        wd.find_element_by_xpath("//form[@id='right']/select//option[2]").click()
+#        self.open_stronaglowna_page()
+#        self.contact_cache = None
 
     def edit_first_contact(self, contact):
         wd = self.app.wd
@@ -178,6 +207,25 @@ class ContactHelper:
         if self.contact_cache is None:
             wd = self.app.wd
             self.open_stronaglowna_page()
+            self.contact_cache = []
+            for row in wd.find_elements_by_name("entry"):
+                cells = row.find_elements_by_tag_name("td")
+                lastname = cells[1].text
+                firstname = cells[2].text
+                id = cells[0].find_element_by_tag_name("input").get_attribute("value")
+                address = cells[3].text
+                all_mails = cells[4].text
+                all_phones = cells[5].text
+                self.contact_cache.append(Contact(lastname=lastname, firstname=firstname, id=id,
+                                                  address=address, all_mails_from_home_page=all_mails,
+                                                  all_phones_from_home_page=all_phones))
+        return list(self.contact_cache)
+
+    def get_contacts_list_in_group(self, id_group):
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.open_stronaglowna_page()
+            wd.find_element_by_xpath('//select[@name="group"]/option[@value="%s"]' % id_group).click()
             self.contact_cache = []
             for row in wd.find_elements_by_name("entry"):
                 cells = row.find_elements_by_tag_name("td")
