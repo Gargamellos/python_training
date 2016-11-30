@@ -1,11 +1,13 @@
 from model.contact import Contact
-from random import randrange
 import re
 
 def test_verification_on_home_page(app,db):
     contact_from_home_page = app.contact.get_contact_list()
     def clean(contact):
-        return Contact(id=contact.id, lastname=contact.lastname.strip(), firstname=contact.firstname.strip())
+        return Contact(id=contact.id, lastname=contact.lastname.strip(), firstname=contact.firstname.strip(),
+                       address=contact.address.strip(), homephone=contact.homephone.strip(), mobilephone=contact.mobilephone.strip(),
+                       workphone=contact.workphone.strip(), email=contact.email.strip(), email2=contact.email2.strip(),
+                       email3=contact.email3.strip(), phone2=contact.phone2.strip())
     contact_from_db_list = map(clean,db.get_contact_list())
     assert sorted(contact_from_home_page, key=Contact.id_or_max) == sorted(contact_from_db_list, key=Contact.id_or_max)
 
